@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>  
+ <head>
+  <title>Digital Color</title> 
+  <script src="../jQueryOfflineCDN"></script>
+</head>
+ <body>  
+    <p align="center"> 
+    <!--This draws the Canvas on the webpage -->
+      <canvas id="mycanvas"></canvas> 
+    </p>
+</body>
+
+<script src="../OfflineCanvasCDN"></script> 
+
+<script>
+var eht = 100;
+var ewth = 100;
+var BWG = false;
+var gVal = 0;
+var tRVal = 0;
+var tGVal = 0;
+var tBVal = 0;
+
+var sketchProc = function(processingInstance) {
+ with (processingInstance) {
+   size(800, 600);
+   frameRate(30);
+
+  // Switch to BWG Mode with button click
+  $(document).on('click', function(){
+  if(mouseX<=260 && mouseX>=60 && mouseY<=280 && mouseY>=255 && BWG == true){
+    BWG = false;
+  }
+  else if(mouseX<=260 && mouseX>=60 && mouseY<=280 && mouseY>=255 && BWG == false){
+    BWG = true;
+  }
+});
+
+  draw = function(){
+    background(0,0,0);
+    textSize(50);
+    fill(255, 255, 255);
+    text("Digital Colors", 250, 75);
+
+    // BWG Mode Button
+    fill(125, 125, 125);
+    rect(60, 255, 200, 25);
+    fill(255, 255, 255);
+    if(BWG==true){
+      textSize(20);
+      text("B/W Gray Mode On", 70, 275);
+    }
+    else if(BWG==false){
+      textSize(20);
+      text("B/W Gray Mode Off", 70, 275);
+    }
+
+    // Draws green sphere with gradient
+    eht=100;
+    ewth=100;
+    Gx=55;
+    for(var i = 0; i<255; i+=1){
+     stroke(0, Gx, 0);
+     fill(0, Gx, 0);
+     ellipse(400, 300, eht, ewth);
+     eht-=1;
+     ewth-=1;
+     Gx+=2;
+   }
+    // Draws blue sphere with gradient
+    eht=100;
+    ewth=100;
+    Bx=55;
+    for(var i = 0; i<255; i+=1){
+     stroke(0, 0, Bx);
+     fill(0, 0, Bx);
+     ellipse(550, 500, eht, ewth);
+     eht-=1;
+     ewth-=1;
+     Bx+=2;
+   }
+    // Draws red sphere with gradient
+    eht=100;
+    ewth=100;
+    Rx=55;
+    for(var i = 0; i<255; i+=1){
+     stroke(Rx, 0, 0);
+     fill(Rx, 0, 0);
+     ellipse(250, 500, eht, ewth);
+     eht-=1;
+     ewth-=1;
+     Rx+=2;
+   }
+
+  // Draws the slider control area labels and guide
+  stroke(255, 255, 255);
+  textSize(20);
+  fill(255, 0, 0);
+  context.font="bold 20pt Arial";
+  text("R", 60, 130);
+  fill(0, 255, 0);
+  text("G", 60, 180);
+  fill(0, 0, 255);
+  text("B", 60, 230);
+  line(100, 120, 355, 120);
+  line(100, 170, 355, 170);
+  line(100, 220, 355, 220);
+
+// Hexadecimal values displayed
+var hex1 = 0;
+var hex2 = 0;
+var rHex1 = 0;
+var rHex2 = 0;
+var gHex1 = 0;
+var gHex2 = 0;
+var bHex1 = 0;
+var bHex2 = 0;
+
+// ********** Black White and Gray Mode ********** //
+// If BWG is true, display black white and gray hex vals
+// Check if whole number hex1 (then hex2 = 0)
+if(BWG==true && gVal%16==0){
+  hex2=0;
+  if(gVal/16<10){
+    hex1=gVal/16;
+  }
+  else if(gVal/16==10){
+    hex1='A';
+  }
+  else if(gVal/16==11){
+    hex1='B';
+  }
+  else if(gVal/16==12){
+    hex1='C';
+  }
+  else if(gVal/16==13){
+    hex1='D';
+  }
+  else if(gVal/16==14){
+    hex1='E';
+  }
+  else if(gVal/16==15){
+    hex1='F';
+  }
+}
+// Is value greater than 16, then hex1 will have a value
+if(BWG==true && gVal/16>=1){
+  // Set hex2
+  if(gVal%16<10){
+    hex2 = gVal%16;
+  }
+  else if(gVal%16==10){
+    hex2 = 'A';
+  }
+  else if(gVal%16==11){
+    hex2 = 'B';
+  }
+  else if(gVal%16==12){
+    hex2 = 'C';
+  }
+  else if(gVal%16==13){
+    hex2 = 'D';
+  }
+  else if(gVal%16==14){
+    hex2 = 'E';
+  }
+  else if(gVal%16==15){
+    hex2 = 'F';
+  }
+  // Set hex1
+  if(BWG==true && gVal/16<10){
+    hex1 = Math.floor(gVal/16);
+  }
+  else if(Math.floor(gVal/16)==10){
+    hex1 = 'A';
+  }
+  else if(Math.floor(gVal/16)==11){
+    hex1 = 'B';
+  }
+  else if(Math.floor(gVal/16)==12){
+    hex1 = 'C';
+  }
+  else if(Math.floor(gVal/16)==13){
+    hex1 = 'D';
+  }
+  else if(Math.floor(gVal/16)==14){
+    hex1 = 'E';
+  }
+  else if(Math.floor(gVal/16)==15){
+    hex1 = 'F';
+  }
+}
+// If no hex 1 val (less than 16)
+if(BWG==true && gVal/16<1){
+  hex1=0;
+  if(gVal%16<10){
+    hex2=gVal%16;
+  }
+  else if(gVal%16==10){
+    hex2='A';
+  }
+  else if(gVal%16==11){
+    hex2='B';
+  }
+  else if(gVal%16==12){
+    hex2='C';
+  }
+  else if(gVal%16==13){
+    hex2='D';
+  }
+  else if(gVal%16==14){
+    hex2='E';
+  }
+  else if(gVal%16==15){
+    hex2='F';
+  }
+}
+
+  // If BWG is selected then initiate the BWG slider
+  if(BWG == true){
+    // Hex Value Display
+    fill(255, 255, 255);
+    context.font = "italic 20pt Arial";
+    text("Hexadecimal", 600, 155);
+    text('#', 610, 195);
+    text(gVal, 375, 310);
+    text(gVal, 225, 510);
+    text(gVal, 525, 510);
+    fill(255, 0, 0);
+    text(hex1, 630, 195);
+    text(hex2, 650, 195);
+    fill(0, 255, 0);
+    text(hex1, 670, 195);
+    text(hex2, 690, 195);
+    fill(0, 0, 255);
+    text(hex1, 710, 195);
+    text(hex2, 730, 195);
+    fill(gVal, gVal, gVal);
+    triangle(275, 400, 400, 550, 525, 400);
+    // Only change gray value if within control box
+    if(mouseX>=100 && mouseX<=355 && mouseY<=230 && mouseY>=110){
+      gVal=mouseX-100;
+    }
+    // Only change slider position when within control box
+    if(mouseX>=100 && mouseX<=355){
+        // RGB Display
+        fill(125, 125, 125);
+        rect(gVal+95, 110, 10, 120);
+      }
+      else if(mouseX<100){  
+        fill(125, 125, 125);
+        rect(gVal+95, 110, 10, 120);
+      }
+      else if(mouseX>355){
+        fill(125, 125, 125);
+        rect(gVal+95, 110, 10, 120);
+      }
+  } // End of BW Gray Mode
+
+  // ********** Color Mode ********** //
+  // Color triangle based on mouse if on mouse slider for color
+  if(BWG == false){
+    // Start of Red Hex Color
+    if(tRVal%16==0){
+      rHex2=0;
+      if(tRVal/16<10){
+        rHex1=tRVal/16;
+      }
+      else if(tRVal/16==10){
+        rHex1='A';
+      }
+      else if(tRVal/16==11){
+        rHex1='B';
+      }
+      else if(tRVal/16==12){
+        rHex1='C';
+      }
+      else if(tRVal/16==13){
+        rHex1='D';
+      }
+      else if(tRVal/16==14){
+        rHex1='E';
+      }
+      else if(tRVal/16==15){
+        rHex1='F';
+      }
+    }
+    // Is value greater than 16, then hex1 will have a value
+    if(tRVal/16>=1){
+      // Set hex2
+      if(tRVal%16<10){
+        rHex2 = tRVal%16;
+      }
+      else if(tRVal%16==10){
+        rHex2 = 'A';
+      }
+      else if(tRVal%16==11){
+        rHex2 = 'B';
+      }
+      else if(tRVal%16==12){
+        rHex2 = 'C';
+      }
+      else if(tRVal%16==13){
+        rHex2 = 'D';
+      }
+      else if(tRVal%16==14){
+        rHex2 = 'E';
+      }
+      else if(tRVal%16==15){
+        rHex2 = 'F';
+      }
+      // Set hex1
+      if(tRVal/16<10){
+        rHex1 = Math.floor(tRVal/16);
+      }
+      else if(Math.floor(tRVal/16)==10){
+        rHex1 = 'A';
+      }
+      else if(Math.floor(tRVal/16)==11){
+        rHex1 = 'B';
+      }
+      else if(Math.floor(tRVal/16)==12){
+        rHex1 = 'C';
+      }
+      else if(Math.floor(tRVal/16)==13){
+        rHex1 = 'D';
+      }
+      else if(Math.floor(tRVal/16)==14){
+        rHex1 = 'E';
+      }
+      else if(Math.floor(tRVal/16)==15){
+        rHex1 = 'F';
+      }
+    }
+    // If no hex 1 val (less than 16)
+    if(tRVal/16<1){
+      rHex1=0;
+      if(tRVal%16<10){
+        rHex2=tRVal%16;
+      }
+      else if(tRVal%16==10){
+        rHex2='A';
+      }
+      else if(tRVal%16==11){
+        rHex2='B';
+      }
+      else if(tRVal%16==12){
+        rHex2='C';
+      }
+      else if(tRVal%16==13){
+        rHex2='D';
+      }
+      else if(tRVal%16==14){
+        rHex2='E';
+      }
+      else if(tRVal%16==15){
+        rHex2='F';
+      }
+    }
+    // Start of Green Hex Color
+    if(tGVal%16==0){
+      gHex2=0;
+      if(tGVal/16<10){
+        gHex1=tGVal/16;
+      }
+      else if(tGVal/16==10){
+        gHex1='A';
+      }
+      else if(tGVal/16==11){
+        gHex1='B';
+      }
+      else if(tGVal/16==12){
+        gHex1='C';
+      }
+      else if(tGVal/16==13){
+        gHex1='D';
+      }
+      else if(tGVal/16==14){
+        gHex1='E';
+      }
+      else if(tGVal/16==15){
+        gHex1='F';
+      }
+    }
+    // Is value greater than 16, then hex1 will have a value
+    if(tGVal/16>=1){
+      // Set hex2
+      if(tGVal%16<10){
+        gHex2 = tGVal%16;
+      }
+      else if(tGVal%16==10){
+        gHex2 = 'A';
+      }
+      else if(tGVal%16==11){
+        gHex2 = 'B';
+      }
+      else if(tGVal%16==12){
+        gHex2 = 'C';
+      }
+      else if(tGVal%16==13){
+        gHex2 = 'D';
+      }
+      else if(tGVal%16==14){
+        gHex2 = 'E';
+      }
+      else if(tGVal%16==15){
+        gHex2 = 'F';
+      }
+      // Set hex1
+      if(tGVal/16<10){
+        gHex1 = Math.floor(tGVal/16);
+      }
+      else if(Math.floor(tGVal/16)==10){
+        gHex1 = 'A';
+      }
+      else if(Math.floor(tGVal/16)==11){
+        gHex1 = 'B';
+      }
+      else if(Math.floor(tGVal/16)==12){
+        gHex1 = 'C';
+      }
+      else if(Math.floor(tGVal/16)==13){
+        gHex1 = 'D';
+      }
+      else if(Math.floor(tGVal/16)==14){
+        gHex1 = 'E';
+      }
+      else if(Math.floor(tGVal/16)==15){
+        gHex1 = 'F';
+      }
+    }
+    // If no hex 1 val (less than 16)
+    if(tGVal/16<1){
+      gHex1=0;
+      if(tGVal%16<10){
+        gHex2=tGVal%16;
+      }
+      else if(tGVal%16==10){
+        gHex2='A';
+      }
+      else if(tGVal%16==11){
+        gHex2='B';
+      }
+      else if(tGVal%16==12){
+        gHex2='C';
+      }
+      else if(tGVal%16==13){
+        gHex2='D';
+      }
+      else if(tGVal%16==14){
+        gHex2='E';
+      }
+      else if(tGVal%16==15){
+        gHex2='F';
+      }
+    }
+    // Start of Blue Hex Color
+    if(tBVal%16==0){
+      bHex2=0;
+      if(tBVal/16<10){
+        bHex1=tBVal/16;
+      }
+      else if(tBVal/16==10){
+        bHex1='A';
+      }
+      else if(tBVal/16==11){
+        bHex1='B';
+      }
+      else if(tBVal/16==12){
+        bHex1='C';
+      }
+      else if(tBVal/16==13){
+        bHex1='D';
+      }
+      else if(tBVal/16==14){
+        bHex1='E';
+      }
+      else if(tBVal/16==15){
+        bHex1='F';
+      }
+    }
+    // Is value greater than 16, then hex1 will have a value
+    if(tBVal/16>=1){
+      // Set hex2
+      if(tBVal%16<10){
+        bHex2 = tBVal%16;
+      }
+      else if(tBVal%16==10){
+        bHex2 = 'A';
+      }
+      else if(tBVal%16==11){
+        bHex2 = 'B';
+      }
+      else if(tBVal%16==12){
+        bHex2 = 'C';
+      }
+      else if(tBVal%16==13){
+        bHex2 = 'D';
+      }
+      else if(tBVal%16==14){
+        bHex2 = 'E';
+      }
+      else if(tBVal%16==15){
+        bHex2 = 'F';
+      }
+      // Set hex1
+      if(tBVal/16<10){
+        bHex1 = Math.floor(tBVal/16);
+      }
+      else if(Math.floor(tBVal/16)==10){
+        bHex1 = 'A';
+      }
+      else if(Math.floor(tBVal/16)==11){
+        bHex1 = 'B';
+      }
+      else if(Math.floor(tBVal/16)==12){
+        bHex1 = 'C';
+      }
+      else if(Math.floor(tBVal/16)==13){
+        bHex1 = 'D';
+      }
+      else if(Math.floor(tBVal/16)==14){
+        bHex1 = 'E';
+      }
+      else if(Math.floor(tBVal/16)==15){
+        bHex1 = 'F';
+      }
+    }
+    // If no hex 1 val (less than 16)
+    if(tBVal/16<1){
+      bHex1=0;
+      if(tBVal%16<10){
+        bHex2=tBVal%16;
+      }
+      else if(tBVal%16==10){
+        bHex2='A';
+      }
+      else if(tBVal%16==11){
+        bHex2='B';
+      }
+      else if(tBVal%16==12){
+        bHex2='C';
+      }
+      else if(tBVal%16==13){
+        bHex2='D';
+      }
+      else if(tBVal%16==14){
+        bHex2='E';
+      }
+      else if(tBVal%16==15){
+        bHex2='F';
+      }
+    }
+
+    // Hex Display
+    fill(255, 255, 255);
+    context.font = "italic 20pt Arial";
+    text("Hexadecimal", 600, 155);
+    text('#', 610, 195);
+    fill(255, 0, 0);
+    text(rHex1, 630, 195);
+    text(rHex2, 650, 195);
+    fill(0, 255, 0);
+    text(gHex1, 670, 195);
+    text(gHex2, 690, 195);
+    fill(0, 0, 255);
+    text(bHex1, 710, 195);
+    text(bHex2, 730, 195);
+
+    // Triangle Display
+    fill(tRVal, tGVal, tBVal);
+    triangle(275, 400, 400, 550, 525, 400);
+    context.font = "italic 20pt Arial";
+    fill(255, 255, 255);
+    text(tGVal, 375, 310);
+    text(tRVal, 225, 510);
+    text(tBVal, 525, 510);
+
+    // Pass mouse x value to each R, G, and B color channel only when on that slider
+    if(mouseX>=100 && mouseX<=355){
+      if(mouseY>=110 && mouseY<=130){
+        tRVal = mouseX-100;
+        rect(mouseX-5, 110, 10, 20);
+      }
+      else if(mouseY>=160 && mouseY<=180){
+        tGVal = mouseX-100;
+        rect(mouseX-5, 160, 10, 20);
+      }
+      else if(mouseY>=210 && mouseY<=230){
+        tBVal = mouseX-100;
+        rect(mouseX-5, 210, 10, 20);
+      }
+        fill(125, 125, 125);
+        rect(tRVal+95, 110, 10, 20);
+        rect(tGVal+95, 160, 10, 20);
+        rect(tBVal+95, 210, 10, 20);
+      }
+      else if(mouseX<100){
+        fill(125, 125, 125);
+        rect(tRVal+95, 110, 10, 20);
+        rect(tGVal+95, 160, 10, 20);
+        rect(tBVal+95, 210, 10, 20);
+      }
+      else if(mouseX>355){
+        fill(125, 125, 125);
+        rect(tRVal+95, 110, 10, 20);
+        rect(tGVal+95, 160, 10, 20);
+        rect(tBVal+95, 210, 10, 20);
+      }
+  } // End of R, G, or B click
+  } // End of draw function
+}}; // End of with and sketchProc
+
+// Get the canvas that Processing-js will use
+    var canvas = document.getElementById("mycanvas");
+    var context = canvas.getContext('2d');
+    // Pass the function sketchProc (defined in myCode.js) to Processing's constructor.
+    var processingInstance = new Processing(canvas, sketchProc);
+ 
+</script>
+</html>
